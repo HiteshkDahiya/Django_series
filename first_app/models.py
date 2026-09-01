@@ -39,7 +39,7 @@ from django.contrib.auth.models import PermissionsMixin
 #         return self.get_id_display()
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username = None
+    # username = None
     email = models.EmailField(_('email address'), unique=True)
     name = models.CharField(max_length=255)
     is_staff = models.BooleanField(default=False)

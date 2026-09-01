@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-f3wvi+l-vo86d0qw#ixl$*tkdvk!qmr=6v#c!itht_@9@%_snx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['www.wondershop.in', 'services.wondershop.in', '127.0.0.1', 'admin.wondershop.in']
 
 
 # Application definition
@@ -37,10 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'first_app'
+    'first_app',
+    'seller',
+    'django_hosts',
 ]
 
 MIDDLEWARE = [
+    'django_hosts.middleware.HostsRequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -48,9 +51,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_hosts.middleware.HostsResponseMiddleware'
 ]
 
 ROOT_URLCONF = 'first_project.urls'
+
+ROOT_HOSTCONF = 'first_project.hosts'
+DEFAULT_HOST = 'www'
+PARENT_HOST = 'wondershop.in'
+HOST_PORT = "8000"
 
 TEMPLATES = [
     {
@@ -130,3 +139,5 @@ MAILERS = {
 AUTH_USER_MODEL = 'first_app.CustomUser'
 
 LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'
