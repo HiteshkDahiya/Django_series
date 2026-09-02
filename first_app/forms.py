@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-from .models import CustomUser, Contact, Seller, SellerAdditional
+from .models import CustomUser, Contact, Seller, SellerAdditional, ProductInCart
 from django import forms
 from django.core.validators import RegexValidator
 
@@ -54,4 +54,11 @@ class RegistrationSellerForm(forms.ModelForm):
         fields = [
             'gst',
             'warehouse_location',
+        ]
+
+class CartForm(forms.ModelForm):
+    class Meta:
+        model = ProductInCart
+        fields = [
+            'quantity'
         ]

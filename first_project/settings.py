@@ -11,10 +11,14 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+env = environ.Env()
+env.read_env(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
@@ -141,3 +145,38 @@ AUTH_USER_MODEL = 'first_app.CustomUser'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
+
+#SMTP SETTINGS
+MAILERS = {
+    "default": {
+        "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+        "OPTIONS": {
+            "host": "smtp.gmail.com",
+            "port": 587,
+            "username": env("EMAIL_HOST_USER"),
+            "password": env("EMAIL_HOST_PASSWORD"),
+            "use_tls": True,
+        },
+    }
+}
+EMAIL_FROM = env("EMAIL_HOST_USER")
+#PASSWORD_RESET_TIMEOUT_DAYS = "7"
+
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR : 'danger'   # here we can override tags meaning in place of there actual color replace by another
+}
+
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#         'LOCATION': 'my_cache_table',
+#     }
+# }
+
+#SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+#SESSION_ENGINE = "django.contrib.sessions.backends.file"
+#SESSION_FILE_PATH = r"D:\mastering_django\first_project"
+#SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+#SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+#SESSION_CACHE_ALIAS
