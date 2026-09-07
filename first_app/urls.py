@@ -39,15 +39,24 @@ urlpatterns = [
 
     path('testsessions/', views.testsessions, name="testsessions"),
 
-    path('listproducts/', views.ListProducts.as_view(), name="listproducts"),
-    # path('listproducts/', views.listProducts, name="listproducts"),
+    # path('listproducts/', views.ListProducts.as_view(), name="listproducts"),
+    path('listproducts/', views.listProducts, name="listproducts"),
     path('productdetail/<int:pk>/', views.ProductDetail.as_view(), name="productdetail"),
     path('addtocart/<int:id>/', views.addToCart, name="addtocart"),
     path('displaycart/', views.DisplayCart.as_view(), name="displaycart"),
     path('updatecart/<int:pk>/', views.UpdateCart.as_view(), name="updatecart"),
     path('deletefromcart/<int:pk>/', views.DeleteFromCart.as_view(), name="deletefromcart"),
 
+    path('api/suggestionapi/', views.suggestionApi, name="suggestionapi"),
 
+   # Payment APIs
+    path('payment/', views.payment, name = 'payment'),
+    path('handlerequest/', views.handlerequest, name = 'handlerequest'),
+    # Generating Invoice
+    path('generateinvoice/<int:pk>/', views.GenerateInvoice.as_view(), name = 'generateinvoice'),
 ]
 
-# urlpatterns += static(settings.MEDIA_URL ,document_root = settings.MEDIA_ROOT)
+urlpatterns += static(
+    settings.MEDIA_URL,
+    document_root=settings.MEDIA_ROOT
+)

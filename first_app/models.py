@@ -78,7 +78,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     default_type = Types.CUSTOMER
 
     # type = models.CharField(_('Type'), max_length=255, choices=Types.choices, default=default_type)
-    type = MultiSelectField(choices=Types.choices, default=[], null=True, blank=True)
+    type = MultiSelectField(
+        choices=Types.choices,
+        default=[],
+        max_length=100,
+        null=True,
+        blank=True,
+    )
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -145,7 +151,9 @@ class Customer(CustomUser):
 # Create your models here.
 class Product(models.Model):
     product_id = models.AutoField(primary_key=True)
+    image = models.ImageField(upload_to='products/', blank=True, null=True)                             
     product_name = models.CharField(max_length=255)
+    brand = models.CharField(max_length=1000)
     price = models.FloatField()
 
     @classmethod
@@ -190,16 +198,6 @@ class ProductInCart(models.Model):
     quantity = models.PositiveIntegerField()
 
 
-class Order(models.Model):
-    status_choices = (
-        (1, 'Not Packed'),
-        (2, 'Ready for Shipment'),
-        (3, 'Shipped'),
-        (4, 'Delivered')
-    )
-
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    status = models.IntegerField(choices=status_choices, default=1)
 
 
 class Deal(models.Model):
@@ -214,3 +212,45 @@ class Contact(models.Model):
     phone = models.CharField(max_length=255, validators=[phone_regex])
     query = models.TextField()
 
+
+class Order(models.Model):
+    status_choices = (
+        (1, 'Not Packed'),
+        (2, 'Ready For Shipment'),
+        (3, 'Shipped'),
+        (4, 'Delivered')
+    )
+    payment_status_choices = (
+        (1, 'SUCCESS'),
+        (2, 'FAILURE' ),
+        (3, 'PENDING'),
+    )
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    status = models.IntegerField(choices = status_choices, default=1)
+
+    total_amount = models.FloatField()
+    payment_status = models.IntegerField(choices = payment_status_choices, default=3)
+    order_id = models.CharField(unique=True, max_length=100, null=True, blank=True, default=None) 
+    datetime_of_payment = models.DateTimeField(default=timezone.now)
+    # related to razorpay
+    razorpay_order_id = models.CharField(max_length=500, null=True, blank=True)
+    razorpay_payment_id = models.CharField(max_length=500, null=True, blank=True)
+    razorpay_signature = models.CharField(max_length=500, null=True, blank=True)
+    
+
+    def save(self, *args, **kwargs):
+        if self.order_id is None and self.datetime_of_payment and self.id:
+            self.order_id = self.datetime_of_payment.strftime('PAY2ME%Y%m%dODR') + str(self.id)
+        return super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.user.email + " " + str(self.id)
+    
+
+class ProductInOrder(models.Model):
+    class Meta:
+        unique_together = (('order', 'product'),)
+    order = models.ForeignKey(Order, on_delete = models.CASCADE)
+    product = models.ForeignKey(Product, on_delete = models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    price = models.FloatField()

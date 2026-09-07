@@ -87,9 +87,17 @@ WSGI_APPLICATION = 'first_project.wsgi.application'
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # },
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'testdb',
+        'USER': 'root',
+        'PASSWORD': env("XAMPP_PASSWORD"),
+        'HOST': '127.0.0.1',
+        'PORT': '3307',
     }
 }
 
@@ -129,7 +137,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
@@ -180,3 +191,10 @@ MESSAGE_TAGS = {
 #SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 #SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 #SESSION_CACHE_ALIAS
+
+
+Test_API_Key = env('Test_API_Key')
+Test_Key_Secret = env('Test_Key_Secret')
+
+print("BASE_DIR =", BASE_DIR)
+print("STATIC_ROOT =", STATIC_ROOT)
