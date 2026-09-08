@@ -254,3 +254,12 @@ class ProductInOrder(models.Model):
     product = models.ForeignKey(Product, on_delete = models.CASCADE)
     quantity = models.PositiveIntegerField()
     price = models.FloatField()
+
+
+class PremiumProduct(models.Model):
+    product_name = models.CharField(max_length=15)
+    image = models.ImageField(upload_to = "first_app/premiumproductimages", default = None, null = True, blank = True)
+    price = models.FloatField()
+    brand = models.CharField(max_length=1000)
+    date_added = models.DateTimeField(default=timezone.now)
+
